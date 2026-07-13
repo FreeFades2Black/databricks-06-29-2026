@@ -43,3 +43,38 @@ def bronze_apex_market_intelligence():
         .withColumn("ingestion_time", current_timestamp())
         .withColumn("analyst_assigned", lit("Scott Steiert"))
     )
+# Create a dummy dataset of retail transactions
+data = [
+    (1, "Laptop", "Electronics", 1200, "NY"),
+    (2, "Phone", "Electronics", 800, "CA"),
+    (3, "Desk Chair", "Furniture", 250, "NY"),
+    (4, "Monitor", "Electronics", 400, "TX"),
+    (5, "Lamp", "Furniture", 50, "CA")
+]
+Markdown
+# FILE: ~./pyspark_cheatsheet.md
+
+# THE GUNSLINGER'S RECKONING: PYSPARK DATAFRAME BASICS
+# Secure the perimeter and map the terrain before the showdown.
+
+## 1. Wrangling the Data (Ingestion)
+# Load the raw materials into the chamber.
+df = spark.read.csv("dbfs:/path/to/data.csv", header=True, inferSchema=True)
+df = spark.read.table("catalog.schema.table")
+
+## 2. Scouting the Terrain (Inspection)
+# Know your target before you pull the trigger.
+df.show()               # Prints the rows to the console
+df.printSchema()        # Reveals the data types and structure
+df.count()              # Counts the total bounty (rows)
+
+## 3. Painting the Target (Transformations)
+# Refine your aim. Transformations are lazy; they only plan the path.
+filtered_df = df.filter(df.category == "Electronics")
+selected_df = df.select("product", "price")
+grouped_df  = df.groupBy("state").avg("price")
+
+## 4. Pulling the Trigger (Actions)
+# Execute the plan across the frontier. This kicks off the real compute.
+df.show()
+df.write.mode("overwrite").saveAsTable("catalog.schema.target_table")
